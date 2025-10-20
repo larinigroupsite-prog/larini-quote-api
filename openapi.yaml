@@ -1,0 +1,65 @@
+openapi: 3.1.0
+info:
+  title: Larini Quote API
+  version: "1.0.0"
+servers:
+  - url: https://YOUR-RENDER-URL.onrender.com
+paths:
+  /health:
+    get:
+      operationId: health
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /generate:
+    post:
+      operationId: generateQuote
+      summary: Generate Larini PDF quote
+      description: >
+        Generate a pixel-perfect Larini quotation PDF. Provide either a JSON string with data fields,
+        or upload a supplier file to parse. Always provide a vehicle photo.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                data_json:
+                  type: string
+                  description: JSON string with quote fields
+                vehicle_photo:
+                  type: string
+                  format: binary
+                  description: Vehicle photo (jpg/png)
+                supplier_file:
+                  type: string
+                  format: binary
+                  description: Optional supplier PDF/DOCX to parse
+                header_image:
+                  type: string
+                  format: binary
+                  description: Optional custom header image
+                footer_image:
+                  type: string
+                  format: binary
+                  description: Optional custom footer image
+                output_name:
+                  type: string
+                  description: Desired PDF filename
+      responses:
+        '200':
+          description: The generated PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
